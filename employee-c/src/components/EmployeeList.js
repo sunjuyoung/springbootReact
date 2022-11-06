@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import EmployeeService from '../service/EmployeeService';
+import Employee from './Employee';
 
 const EmployeeList = () => {
 
@@ -22,6 +23,17 @@ const EmployeeList = () => {
         fetchData();
     }, [])
     
+    const deleteHandle = (e,id) => {
+        e.preventDefault();
+        EmployeeService.deleteEmployee(id).then((res)=>{
+            if(employee){
+                setEmployee((prevElement)=>{
+                    return prevElement.filter((employee)=> employee.id !== id);
+                })
+            }
+        })
+
+    };
 
     
   return (
@@ -47,7 +59,7 @@ const EmployeeList = () => {
                         <div className="font-semibold text-center">Email</div>
                     </th>
                     <th className="p-2">
-                        <div className="font-semibold text-center">Sales</div>
+                        <div className="font-semibold text-center">Action</div>
                     </th>
                     </tr>
                 </thead>
@@ -55,21 +67,7 @@ const EmployeeList = () => {
                 {!loading && ( 
                 <tbody className="text-sm font-medium divide-y divide-slate-100">
                     {employee.map((em)=> (
-                        <tr key={em.id}>
-                            <td className="p-2">
-                                <div className="text-slate-800">{em.id}</div>
-                            </td>
-                            <td className="p-2">
-                                <div className="text-center">{em.nickname}</div>
-                            </td>
-                            <td className="p-2">
-                                <div className="text-center text-green-500">{em.email}</div>
-                            </td>
-                            <td className="p-2 flex justify-center ">
-                                <a href='/edit' className='mx-1 hover:text-blue-500'>Edit</a>
-                                <a href='/delete' className='mx-1 hover:text-red-500'>Delete</a>
-                            </td>
-                        </tr>
+                        <Employee em={em} key={em.id} deleteHandle={deleteHandle}></Employee>
                     ))}
                     
                 </tbody>)}
