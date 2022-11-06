@@ -10,4 +10,10 @@ public interface EmployeeService {
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO);
 
     public List<EmployeeDTO> list();
+
+    public boolean deleteEmployee(Long id);
+
+    public EmployeeDTO getEmployeeById(Long id);
+
+    EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO);
 }

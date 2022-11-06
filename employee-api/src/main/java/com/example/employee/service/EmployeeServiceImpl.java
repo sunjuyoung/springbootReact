@@ -6,6 +6,7 @@ import com.example.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +35,29 @@ public class EmployeeServiceImpl implements EmployeeService{
         List<EmployeeDTO> dtoList =
                 employeeList.stream().map(e -> modelMapper.map(e, EmployeeDTO.class)).collect(Collectors.toList());
         return dtoList;
+    }
+
+    @Override
+    public boolean deleteEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow();
+        employeeRepository.delete(employee);
+        return true;
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow();
+        EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
+        return employeeDTO;
+    }
+
+    @Transactional
+    @Override
+    public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
+
+        Employee employee = employeeRepository.findById(id).orElseThrow();
+        employee.editEmployee(employeeDTO);
+        employeeDTO.setId(id);
+        return employeeDTO;
     }
 }
